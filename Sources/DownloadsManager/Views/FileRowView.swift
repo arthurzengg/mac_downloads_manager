@@ -46,6 +46,7 @@ struct FileRowView: View {
         }
         .padding(.vertical, 4)
         .padding(.horizontal, 8)
+        .contentShape(Rectangle())
         .background(isSelected ? Color.accentColor.opacity(0.15) : Color.clear)
         .cornerRadius(6)
     }

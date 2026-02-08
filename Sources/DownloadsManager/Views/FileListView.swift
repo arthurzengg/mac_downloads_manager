@@ -114,13 +114,15 @@ struct FileListView: View {
         ScrollView {
             LazyVStack(spacing: 2) {
                 ForEach(viewModel.filteredFiles) { file in
-                    FileRowView(
-                        file: file,
-                        isSelected: viewModel.selectedFiles.contains(file)
-                    )
-                    .onTapGesture {
+                    Button(action: {
                         handleFileTap(file)
+                    }) {
+                        FileRowView(
+                            file: file,
+                            isSelected: viewModel.selectedFiles.contains(file)
+                        )
                     }
+                    .buttonStyle(.plain)
                     .contextMenu {
                         fileContextMenu(for: file)
                     }
