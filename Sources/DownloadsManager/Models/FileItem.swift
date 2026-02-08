@@ -26,12 +26,40 @@ struct FileItem: Identifiable, Hashable {
             .isDirectoryKey
         ])
 
-        self.size = Int64(resourceValues?.fileSize ?? 0)
         self.dateModified = resourceValues?.contentModificationDate ?? Date.distantPast
         self.dateCreated = resourceValues?.creationDate ?? Date.distantPast
         self.isDirectory = resourceValues?.isDirectory ?? false
-        self.category = FileCategory.category(for: url.pathExtension)
+
+        // For directories, recursively calculate total size
+        if self.isDirectory {
+            self.size = FileItem.directorySize(at: url)
+        } else {
+            self.size = Int64(resourceValues?.fileSize ?? 0)
+        }
+
+        self.category = FileCategory.category(for: url.pathExtension, isDirectory: self.isDirectory)
         self.sizeCategory = FileSizeCategory.category(for: self.size)
+    }
+
+    /// Recursively calculate the total size of a directory
+    private static func directorySize(at url: URL) -> Int64 {
+        let fm = FileManager.default
+        guard let enumerator = fm.enumerator(
+            at: url,
+            includingPropertiesForKeys: [.fileSizeKey, .isDirectoryKey],
+            options: [.skipsHiddenFiles]
+        ) else {
+            return 0
+        }
+
+        var totalSize: Int64 = 0
+        for case let fileURL as URL in enumerator {
+            let values = try? fileURL.resourceValues(forKeys: [.fileSizeKey, .isDirectoryKey])
+            if values?.isDirectory == false {
+                totalSize += Int64(values?.fileSize ?? 0)
+            }
+        }
+        return totalSize
     }
 
     var formattedSize: String {

@@ -5,6 +5,7 @@ import SwiftUI
 
 enum FileCategory: String, CaseIterable, Identifiable {
     case all = "All Files"
+    case folders = "Folders"
     case images = "Images"
     case documents = "Documents"
     case videos = "Videos"
@@ -19,6 +20,7 @@ enum FileCategory: String, CaseIterable, Identifiable {
     var icon: String {
         switch self {
         case .all: return "folder.fill"
+        case .folders: return "folder.badge.gearshape"
         case .images: return "photo.fill"
         case .documents: return "doc.fill"
         case .videos: return "film.fill"
@@ -33,6 +35,7 @@ enum FileCategory: String, CaseIterable, Identifiable {
     var color: Color {
         switch self {
         case .all: return .blue
+        case .folders: return .indigo
         case .images: return .green
         case .documents: return .orange
         case .videos: return .purple
@@ -47,6 +50,7 @@ enum FileCategory: String, CaseIterable, Identifiable {
     var extensions: Set<String> {
         switch self {
         case .all: return []
+        case .folders: return []
         case .images: return ["jpg", "jpeg", "png", "gif", "webp", "svg", "heic", "heif", "tiff", "tif", "bmp", "ico"]
         case .documents: return ["pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx", "txt", "md", "rtf", "csv", "pages", "numbers", "keynote"]
         case .videos: return ["mp4", "mov", "avi", "mkv", "wmv", "flv", "webm", "m4v"]
@@ -58,10 +62,14 @@ enum FileCategory: String, CaseIterable, Identifiable {
         }
     }
 
-    static func category(for fileExtension: String) -> FileCategory {
+    /// Determine category for a file. Use `isDirectory` flag for folders.
+    static func category(for fileExtension: String, isDirectory: Bool = false) -> FileCategory {
+        if isDirectory {
+            return .folders
+        }
         let ext = fileExtension.lowercased()
         for category in FileCategory.allCases {
-            if category == .all || category == .other { continue }
+            if category == .all || category == .other || category == .folders { continue }
             if category.extensions.contains(ext) {
                 return category
             }
