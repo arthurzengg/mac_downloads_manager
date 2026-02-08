@@ -157,7 +157,7 @@ struct FileListView: View {
         Button(role: .destructive, action: {
             viewModel.deleteFiles([file])
         }) {
-            Label("Move to Trash", systemImage: "trash")
+            Label("Delete Permanently", systemImage: "trash")
         }
     }
 

@@ -136,7 +136,7 @@ class FileManagerViewModel: ObservableObject {
 
         for file in filesToDelete {
             do {
-                try FileManager.default.trashItem(at: file.url, resultingItemURL: nil)
+                try FileManager.default.removeItem(at: file.url)
                 allFiles.removeAll { $0 == file }
                 selectedFiles.remove(file)
                 deletedCount += 1
@@ -149,7 +149,7 @@ class FileManagerViewModel: ObservableObject {
             selectedFileForPreview = nil
         }
 
-        statusMessage = "Moved \(deletedCount) file(s) to Trash."
+        statusMessage = "Permanently deleted \(deletedCount) file(s)."
 
         // Refresh duplicate groups
         if !duplicateGroups.isEmpty {
@@ -161,7 +161,7 @@ class FileManagerViewModel: ObservableObject {
         var deletedCount = 0
         for file in files {
             do {
-                try FileManager.default.trashItem(at: file.url, resultingItemURL: nil)
+                try FileManager.default.removeItem(at: file.url)
                 allFiles.removeAll { $0 == file }
                 selectedFiles.remove(file)
                 deletedCount += 1
@@ -174,7 +174,7 @@ class FileManagerViewModel: ObservableObject {
             selectedFileForPreview = nil
         }
 
-        statusMessage = "Moved \(deletedCount) file(s) to Trash."
+        statusMessage = "Permanently deleted \(deletedCount) file(s)."
     }
 
     func moveSelectedFiles() {

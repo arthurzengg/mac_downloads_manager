@@ -21,13 +21,13 @@ struct ContentView: View {
                 toolbarItems
             }
         }
-        .alert("Confirm Delete", isPresented: $viewModel.showDeleteConfirmation) {
+        .alert("Permanently Delete", isPresented: $viewModel.showDeleteConfirmation) {
             Button("Cancel", role: .cancel) { }
-            Button("Delete", role: .destructive) {
+            Button("Delete Permanently", role: .destructive) {
                 viewModel.deleteSelectedFiles()
             }
         } message: {
-            Text("Are you sure you want to move \(viewModel.selectedFiles.count) file(s) to Trash? You can restore them from Trash.")
+            Text("Are you sure you want to permanently delete \(viewModel.selectedFiles.count) file(s)? This action cannot be undone.")
         }
         .onAppear {
             viewModel.scanFiles()
